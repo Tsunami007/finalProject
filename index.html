@@ -7,13 +7,75 @@
 		<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
-		
-		<script>
+	
+	</head>
+	<body>
+		<div id="page_notes" data-role="page">
+			<div data-role="header">
+				<h2>My notes</h2>
+				<a href="#page_addNote" data-icon="plus" class="ui-btn-right" data-role="button">Add</a>
+			</div>
+			<div class="ui-content">
+				<ul id="list_notes" data-role="listview">
+					<li><a href="#page_viewnNote">Test Note</a></li>
+
+					
+				</ul>
+		</div>
+	</div>
+	<div id="page_viewnNote" data-role="page">
+		<div data-role="header">
+			<a href="#page_notes" data-role="button" data-icon="carat-l">Back</a>
+			<h2>View Notes</h2>
+			<a href="#page_editNote" data-role="button" data-icon="edit">Edit</a>
+		</div>
+		<div class="ui-content">
+			<h2 id="p_title">TestNote</h2>
+			<p id="p_content">Content</p>
+			<p id="p_location">Location</p>
+			
+		</div>
+	</div>
+<div id="page_addNote" data-role="page">
+	<!-- <div id="page_viewnNote" data-role="page"> -->
+	<div data-role="header">
+		<a data-rel="back" data-role="button" data-icon="carat-l">Back</a>
+		<h2>Add Note</h2>
+	</div>
+	<div class="ui-content">
+		<input type="text" id="tf_title" placeholder="Title">
+		<textarea id="tf_content"></textarea>
+		<input type="text" id="tf_location" placeholder="Location">
+		<a id="btn_addNote" href="#page_notes"  data-role="button">Add Note</a>
+	</div>
+</div>
+
+<div id="page_editNote" data-role="page">
+	<!-- <div id="page_addNote" data-role="page">
+	<div id="page_viewnNote" data-role="page"> -->
+	<div data-role="header">
+		<a data-rel="back" data-role="button" data-icon="carat-l">Back</a>
+		<h2>Edit Note</h2>
+		<a  id="btn_deleteNote" href="#page_notes" data-icon="delete">Delete</a>
+	</div>
+	<div class="ui-content">
+		<input type="text" id="tf_title_edit">
+		<textarea id="tf_content_edit"></textarea>
+		<input type="text" id="tf_location_edit">
+		<a id="btn_editNote" href="#page_viewnNote"  data-role="button">Edit Note</a>
+	</div>	
+
+
+</div>
+
+	<script>
 			var noteList = [];
 			var selectID = 0;
 
 			//custom Functions
 			//Events Handlers
+
+
 			$("#btn_addNote").on("click", function() {
 				var note = new Object();
 				note.title = $("#tf_title").val();
@@ -24,7 +86,7 @@
 				localStorage.noteList = JSON.stringify (noteList);
 			});
 			$("#btn_editNote").on("click", function(){
-				noteList[selectedID].title = $("#tf_title_edit");
+				noteList[selectedID].title = $("#tf_title_edit").val();
 				noteList[selectedID].content = $("#tf_content_edit").val();
 				noteList[selectedID].location = $("#tf_location_edit").val();
 				localStorage.noteList = JSON.stringify (noteList);
@@ -37,21 +99,25 @@
 				$("#list_notes").html("");
 
 				if (localStorage.noteList != undefined){
-				noteList =JSON.parse (localStorage.noteList);
+					noteList =JSON.parse (localStorage.noteList);
 				}
 
 				for (i=0; i<noteList.length; i++){
 					$("#list_notes").append("<li id='" + i + "'><a href='#page_viewnNote'>" + noteList[i].title + "</a></li>");
+					$("#"+i).on("click", function(){
+						selectedID = this.id;
+					});
 				}
-				$("#list_notes").on("click", function(){
-					selectedID = this.id;
-				});
+				
 				$("#list_notes").listview("refresh");
 			});
 			$("#page_viewnNote").on("pagebeforeshow", function(){
-				$(this).find("ui-content h2").html(noteList[selectedID].title);
-				$(this).find("ui-content p*p_content").html(noteList[selectedID].content);
-			    $(this).find("ui-content p*p_location").html(noteList[selectedID].content);
+				//$(this).find("ui-content h2").html(noteList[selectedID].title);
+				//$(this).find("ui-content p*p_content").html(noteList[selectedID].content);
+			    //$(this).find("ui-content p*p_location").html(noteList[selectedID].content);
+			    $('#p_title').html(noteList[selectedID].title);
+				$('#p_content').html(noteList[selectedID].content);
+			    $('#p_location').html(noteList[selectedID].location);
 			});
 			$("#page_editNote").on("pagebeforeshow", function(){
 				$(this).find("#tf_title_edit").val(noteList[selectedID].title);
@@ -60,69 +126,7 @@
 			});
 
 
-</script>
-
-	
-	</head>
-	<body>
-		<div id="page_notes" data-role="page">
-			<div data-role="header">
-				<h2>My notes</h2>
-				<a href="#page_notes" data-icon="plus" class="ui-btn-right" data-role="button">Add</a>
-			</div>
-			<div class="ui-content">
-				<ul id="list_notes" data-role="listview">
-					<li><a href="#page_viewnNote">Test Note</a></li>
-
-					
-				</ul>
-		</div>
-	</div>
-	<div id="page_viewnNote" data-role="page">
-	<div data-role="header">
-		<a href="#page_notes" data-role="button" data-icon="carat-l">Back</a>
-		<h2>View Notes</h2>
-		<a href="#page_editNote" data-role="button" data-icon="edit">Edit</a>
-	</div>
-	<div class="ui-content">
-		<h2>TestNote</h2>
-		<p id="p_content">Content</p>
-		<p id="p_location">Location</p>
-		
-	</div>
-</div>
-<div id="page_addNote" data-role="page">
-	<div id="page_viewnNote" data-role="page">
-	<div data-role="header">
-		<a data-rel="back" data-role="button" data-icon="carat-l">Back</a>
-		<h2>Add Note</h2>
-	</div>
-	<div class="ui-content">
-		<input type="text" id="tf-title" placeholder="Title">
-		<textarea id="tf_content"></textarea>
-		<input type="text" id="tf-location" placeholder="Location">
-		<a id="btn_addNote" href="#page_notes"  data-role="button">Add Note</a>
-	</div>
-</div>
-
-<div id="page_editNote" data-role="page">
-	<div id="page_addNote" data-role="page">
-	<div id="page_viewnNote" data-role="page">
-	<div data-role="header">
-		<a data-rel="back" data-role="button" data-icon="carat-l">Back</a>
-		<h2>Edit Note</h2>
-		<a  id="btn_deleteNote" href="#page_notes" data-icon="delete">Delete</a>
-	</div>
-	<div class="ui-content">
-		<input type="text" id="tf-title_edit">
-		<textarea id="tf_content_edit"></textarea>
-		<input type="text" id="tf-location_edit">
-		<a id="btn_editNote" href="#page_viewnNote"  data-role="button">Edit Note</a>
-	</div>	
-
-
-</div>
-
+	</script>
 
 
 	</body>
